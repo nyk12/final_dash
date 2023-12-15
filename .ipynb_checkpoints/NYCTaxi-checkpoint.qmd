@@ -71,6 +71,7 @@ fig2 = px.density_heatmap(
     x='pickup_hour',
     y='dayofweek',
     z='dist_mean',
+    labels={'pickup_hour':'pickup 시간', 'dayofweek':'요일'},
     nbinsx=24,
     nbinsy=7,
     height=300
