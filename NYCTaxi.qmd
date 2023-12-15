@@ -1,0 +1,99 @@
+---
+title: "NYCTaxi"
+author: "남윤권(202121220)"
+format: dashboard
+execute: 
+  enabled: true
+  cache: false
+  freeze: false
+---
+
+```{python}
+#| output: false
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.io as pio
+import json
+import requests
+import pickle
+
+pd.options.plotting.backend = "plotly"
+pio.templates.default = "plotly_white"
+
+df = pd.read_csv("https://raw.githubusercontent.com/guebin/DV2023/main/posts/NYCTaxi.csv").assign(
+    log_trip_duration = lambda df: np.log(df.trip_duration),
+    pickup_datetime = lambda df: df.pickup_datetime.apply(pd.to_datetime),
+    dropoff_datetime = lambda df: df.dropoff_datetime.apply(pd.to_datetime),
+    dist = lambda df: np.sqrt((df.pickup_latitude-df.dropoff_latitude)**2 + (df.pickup_longitude-df.dropoff_longitude)**2),
+    #---#
+    vendor_id = lambda df: df.vendor_id.map({1:'A',2:'B'})
+).assign(
+    speed = lambda df: df.dist / df.trip_duration,
+    pickup_hour = lambda df: df.pickup_datetime.dt.hour,
+    dropoff_hour = lambda df: df.dropoff_datetime.dt.hour,
+    dayofweek = lambda df: df.pickup_datetime.dt.dayofweek
+)
+df_small = df[::100].reset_index(drop=True)
+
+##요일, 시간에 따른 평균속력
+
+tidydata1 = df_small.pivot_table(
+    index = 'pickup_hour',
+    columns = 'dayofweek',
+    values = 'speed',
+    aggfunc = 'mean'
+).stack().reset_index().rename({0:'speed_mean'},axis=1)
+
+
+##요일, 시간에 따른 평균이동거리
+
+tidydata2 = df_small.pivot_table(
+    index = 'pickup_hour',
+    columns = 'dayofweek',
+    values = 'dist',
+    aggfunc = 'mean'
+).stack().reset_index().rename({0:'dist_mean'},axis=1)
+
+# 1-(1),(2),(3) 에 대응하는 plotly figure를 아래와 같은 이름으로 저장
+fig1 = px.density_heatmap(
+    data_frame=tidydata1,
+    x='pickup_hour',
+    y='dayofweek',
+    z='speed_mean',
+    labels={'pickup_hour':'pickup 시간', 'dayofweek':'요일'},
+    nbinsx=24,
+    nbinsy=7,
+    height=300
+)
+fig2 = px.density_heatmap(
+    data_frame=tidydata2,
+    x='pickup_hour',
+    y='dayofweek',
+    z='dist_mean',
+    nbinsx=24,
+    nbinsy=7,
+    height=300
+)
+
+# fig3 = ...
+```
+
+# 기말고사1-(1),(2)
+
+```{python}
+#| title: 요일,시간에 따른 평균속력 시각화        
+fig1.show()
+```
+
+```{python}
+#| title: 요일,시간에 따른 평균이동거리 시각화        
+fig2.show()
+```
+
+# 기말고사1-(3)
+
+```{python}
+#| title: 속력별 경로 시각화
+#fig3.show()
+```
