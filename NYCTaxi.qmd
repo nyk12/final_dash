@@ -57,6 +57,7 @@ fig1 = px.density_heatmap(
     x='pickup_hour',
     y='dayofweek',
     z='speed_mean',
+    category_orders={'dayofweek': ['일','토','금','목','수','화','월']},
     nbinsx=24,
     nbinsy=7,
     height=300
@@ -84,6 +85,7 @@ fig2 = px.density_heatmap(
     x='pickup_hour',
     y='dayofweek',
     z='dist_mean',
+    category_orders={'dayofweek': ['일','토','금','목','수','화','월']},
     nbinsx=24,
     nbinsy=7,
     height=300
@@ -154,7 +156,7 @@ fig3 = fig3.update_layout(
 
 
 # 1-(1),(2),(3) 에 대응하는 plotly figure를 아래와 같은 이름으로 저장
-fig1 = fig1 = fig1.update_coloraxes(colorbar_title='평균속력')
+fig1 = fig1.update_coloraxes(colorbar_title='평균속력')
 
 fig2 = fig2.update_coloraxes(colorbar_title='평균이동거리')
 
