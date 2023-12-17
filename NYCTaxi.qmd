@@ -38,11 +38,10 @@ df_small = df[::100].reset_index(drop=True)
 
 day_dict = {'월':'0','화':'1','수':'2','목':'3','금':'4','토':'5','일':'6'}
 
-df_small = df_small.assign(
-    dayofweek = df_small['dayofweek'].astype(str))
+df = df.assign(dayofweek = df['dayofweek'].astype(str))
 
-tidydata1=df_small.assign(
-    dayofweek = df_small.dayofweek.apply(lambda x: [k for k,v in day_dict.items() if x in v].pop()))
+tidydata1=df.assign(
+    dayofweek = df.dayofweek.apply(lambda x: [k for k,v in day_dict.items() if x in v].pop()))
 
 # 1-(1) 요일,시간에 따른 평균속력
 
