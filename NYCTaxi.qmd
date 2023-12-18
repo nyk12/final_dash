@@ -1,6 +1,6 @@
 ---
 title: "NYCTaxi"
-author: "남윤권(202121220)"
+author: "남윤권"
 format: dashboard
 execute: 
   enabled: true
