@@ -1,6 +1,6 @@
 # final_dash
 
-기말고사예상문제
+데이터시각화 기말고사
 
 - NYCTaxi
 - <https://nyk12.github.io/final_dash/NYCTaxi.html>
